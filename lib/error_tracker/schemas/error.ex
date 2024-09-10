@@ -42,6 +42,7 @@ defmodule ErrorTracker.Error do
 
     params = [
       kind: to_string(kind),
+      reason: reason,
       source_line: source_line,
       source_function: source_function
     ]

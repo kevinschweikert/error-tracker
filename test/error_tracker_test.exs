@@ -75,6 +75,17 @@ defmodule ErrorTrackerTest do
       assert error.source_line =~ @relative_file_path
     end
 
+    test "different reasons result in different errors" do
+      occurrences =
+        for i <- 1..3 do
+          report_error(fn -> raise "Error number #{i}" end)
+        end
+
+      # Even though all the errors have the same kind and source they must be separated by reason
+      error_ids = occurrences |> Enum.map(& &1.error_id) |> Enum.uniq()
+      assert Enum.count(error_ids) == 3
+    end
+
     @tag capture_log: true
     test "reports errors with invalid context" do
       # It's invalid because cannot be serialized to JSON
